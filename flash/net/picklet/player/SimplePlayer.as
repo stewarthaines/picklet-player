@@ -26,10 +26,12 @@ package net.picklet.player
     // ------- Constructor -------
     public function SimplePlayer()
     {
-       thumb_controller = new ThumbController();
-       thumb_controller.addPlayer(this);
-       addChild(thumb_controller);
-/*       setChildIndex(thumb_controller, 100);*/
+
+      current_panel = new MovieClip();
+      addChild(current_panel);
+
+      previous_panel = new MovieClip();
+      addChild(previous_panel);
 
       previous_btn = new MovieClip();
       previous_btn.graphics.beginFill(0x000000, 0.1);
@@ -37,6 +39,8 @@ package net.picklet.player
       previous_btn.graphics.endFill();
       addChild(previous_btn);
       previous_btn.addEventListener(MouseEvent.MOUSE_UP, previousPanel);
+      previous_btn.buttonMode = true;
+      previous_btn.useHandCursor = true;
       
       next_btn = new MovieClip();
       next_btn.graphics.beginFill(0x000000, 0.1);
@@ -44,15 +48,15 @@ package net.picklet.player
       next_btn.graphics.endFill();
       addChild(next_btn);
       next_btn.addEventListener(MouseEvent.MOUSE_UP, nextPanel);
-
-      current_panel = new MovieClip();
-      addChild(current_panel);
-      
-      previous_panel = new MovieClip();
-      addChild(previous_panel);
+      next_btn.buttonMode = true;
+      next_btn.useHandCursor = true;
 
       /* keep the thumb_controller above loaded clips */
-      setChildIndex(thumb_controller, 3);
+      thumb_controller = new ThumbController();
+      thumb_controller.addPlayer(this);
+      addChild(thumb_controller);
+      /*       setChildIndex(thumb_controller, 100);*/
+      /*      setChildIndex(thumb_controller, 3);*/
     }
   
     // ------- Methods -------
@@ -77,6 +81,27 @@ package net.picklet.player
       loadPanel(current_panel_index);
     }
 
+    public function showControls(val:Boolean)
+    {
+      thumb_controller.drawThumb(val);
+      var fill_opacity:Number;
+      if (val) {
+        fill_opacity = 0.1;
+      } else {
+        fill_opacity = 0;
+      }
+
+      previous_btn.graphics.clear();
+      previous_btn.graphics.beginFill(0x000000, fill_opacity);
+      previous_btn.graphics.drawRect(0, 0, 80, 380);
+      previous_btn.graphics.endFill();
+
+      next_btn.graphics.clear();
+      next_btn.graphics.beginFill(0x000000, fill_opacity);
+      next_btn.graphics.drawRect(240, 0, 80, 380);
+      next_btn.graphics.endFill();
+    }
+
     public function loadPanel(panel_index:Number)
     {
       if (panel_index >= data.panels.length) {
@@ -91,7 +116,7 @@ package net.picklet.player
       removeChild(previous_panel);
       current_panel = new MovieClip();
       addChild(current_panel);
-      setChildIndex(current_panel, 2);
+      setChildIndex(current_panel, 1);
       
       this.layers = new Array();
 

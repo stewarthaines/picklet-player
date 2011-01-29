@@ -10,7 +10,7 @@ package net.picklet.player
   import flash.events.MouseEvent;
   import flash.utils.Timer;
   import flash.events.TimerEvent;
-  
+
   public class ThumbController extends MovieClip
   {
     private var stage_width:int = 320;
@@ -19,10 +19,10 @@ package net.picklet.player
     private var thumb:MovieClip;
     private var start_x:int;
     private var start_y:int;
-    
+
     private var thumb_start_x:int = 224;
     private var thumb_start_y:int = 407;
-    
+
     private var target_x:int = thumb_start_x;
     private var target_y:int = thumb_start_y;
 
@@ -30,14 +30,16 @@ package net.picklet.player
     private var thumb_height:int = 50;
 
     private var thumb_travel_x:int = -200;
-    
+
     private var thumb_border_radius:int = 10;
     private var anim_timer:Timer;
     private var dragging:Boolean = false;
-    
+
     private var timer_frequency:int = 20; // ms
 
     private var player:SimplePlayer;
+
+    private var draw_thumb:Boolean = true;
 
     public function ThumbController()
     {
@@ -47,23 +49,54 @@ package net.picklet.player
       graphics.drawRect(0, 0, stage_width, 20);
       graphics.endFill();
 
+      buttonMode = true;
+      useHandCursor = true;
+
       // do this to reset the thumb if mouse moves outside the stage
       addEventListener(MouseEvent.MOUSE_OUT, mouseOut);
 
-      thumb = new MovieClip();
-      thumb.graphics.lineStyle(2, 0xff0000);
-      thumb.graphics.beginFill(0xffffff, 0); // fill is transparent
-      thumb.graphics.drawRoundRect(0, 0, thumb_width, thumb_height, thumb_border_radius);
-      thumb.graphics.endFill();
-      thumb.addEventListener(MouseEvent.MOUSE_DOWN, mouseDown);
-      thumb.x = thumb_start_x;
-      thumb.y = thumb_start_y;
+      thumb = getThumb();
       addChild(thumb);
 
       anim_timer = new Timer(timer_frequency, 0);
       anim_timer.addEventListener('timer', timerHandler);
 
       dragging = false;
+    }
+
+    private function getThumb():MovieClip
+    {
+      var thumb = new MovieClip();
+      if (draw_thumb) {
+        thumb.graphics.lineStyle(2, 0xff0000);
+      } else {
+/*        thumb.graphics.lineStyle(0, 0);*/
+      }
+      thumb.graphics.beginFill(0xffffff, 0); // fill is transparent
+      thumb.graphics.drawRoundRect(0, 0, thumb_width, thumb_height, thumb_border_radius);
+      thumb.graphics.endFill();
+      thumb.addEventListener(MouseEvent.MOUSE_DOWN, mouseDown);
+      thumb.x = thumb_start_x;
+      thumb.y = thumb_start_y;
+      return thumb;
+    }
+
+    public function drawThumb(val:Boolean):void
+    {
+      draw_thumb = val;
+      removeChild(thumb);
+      thumb = getThumb();
+      addChild(thumb);
+
+      graphics.clear();
+      if (val) {
+        graphics.beginFill(0x000000, 0.1);
+      } else {
+        graphics.beginFill(0x000000, 0);
+      }
+      graphics.drawRect(0, 386, stage_width, 94);
+      graphics.drawRect(0, 0, stage_width, 20);
+      graphics.endFill();
     }
 
     public function timerHandler(evt:TimerEvent):void {
@@ -94,7 +127,7 @@ package net.picklet.player
         player.updatePositions(pos);
       }
     }
-    
+
     public function mouseOut(evt:MouseEvent) {
       if (dragging && (evt.target == this) && (evt.relatedObject != thumb)) {
         mouseUp(evt);
@@ -114,7 +147,7 @@ package net.picklet.player
       anim_timer.start();
       dragging = true;
     }
-    
+
     public function mouseMove(evt:MouseEvent)
     {
 /*      thumb.x = evt.stageX - start_x;*/
@@ -130,7 +163,7 @@ package net.picklet.player
       }
 /*      thumb.y = thumb_start_y;*/
     }
-    
+
     public function mouseUp(evt:MouseEvent)
     {
       removeEventListener(MouseEvent.MOUSE_MOVE, mouseMove);
@@ -144,7 +177,7 @@ package net.picklet.player
       target_y = thumb_start_y;
       dragging = false;
     }
-    
+
     public function addPlayer(p:SimplePlayer)
     {
       this.player = p;
