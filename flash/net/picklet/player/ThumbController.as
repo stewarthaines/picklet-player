@@ -20,8 +20,8 @@ package net.picklet.player
     private var start_x:int;
     private var start_y:int;
     
-    private var thumb_start_x:int = 210;
-    private var thumb_start_y:int = 390;
+    private var thumb_start_x:int = 224;
+    private var thumb_start_y:int = 407;
     
     private var target_x:int = thumb_start_x;
     private var target_y:int = thumb_start_y;
@@ -29,22 +29,24 @@ package net.picklet.player
     private var thumb_width:int = 70;
     private var thumb_height:int = 50;
 
-    private var thumb_travel_x:int = 200;
+    private var thumb_travel_x:int = -200;
     
     private var thumb_border_radius:int = 10;
     private var anim_timer:Timer;
     private var dragging:Boolean = false;
     
     private var timer_frequency:int = 20; // ms
-    private var direction_rtl:Boolean = true;
+
+    private var player:SimplePlayer;
 
     public function ThumbController()
     {
       // draw background so this MovieClip gets the specified dimensions
-      graphics.beginFill(0x00ff00, 0.0);
-      graphics.drawRect(x, y, stage_width, stage_height);
+      graphics.beginFill(0x000000, 0.1);
+      graphics.drawRect(0, 386, stage_width, 94);
+      graphics.drawRect(0, 0, stage_width, 20);
       graphics.endFill();
-      
+
       // do this to reset the thumb if mouse moves outside the stage
       addEventListener(MouseEvent.MOUSE_OUT, mouseOut);
 
@@ -85,6 +87,12 @@ package net.picklet.player
           }
         }
       }
+      /* notify listeners of move event */
+      if (this.player) {
+        var pos = (thumb.x - thumb_start_x) / thumb_travel_x;
+/*        trace(pos);*/
+        player.updatePositions(pos);
+      }
     }
     
     public function mouseOut(evt:MouseEvent) {
@@ -111,14 +119,14 @@ package net.picklet.player
     {
 /*      thumb.x = evt.stageX - start_x;*/
       target_x = evt.stageX - start_x;
-      if (direction_rtl) {
+      if (thumb_travel_x < 0) {
         if (target_x > thumb_start_x) {
           target_x = thumb_start_x;
-        } else if (target_x < (thumb_start_x - thumb_travel_x)) {
-          target_x = thumb_start_x - thumb_travel_x;
+        } else if (target_x < (thumb_start_x + thumb_travel_x)) {
+          target_x = thumb_start_x + thumb_travel_x;
         }
       } else {
-        // fill in (direction_rtl == false) case here as required
+        // fill in (thumb_travel_x > 0) case here as required
       }
 /*      thumb.y = thumb_start_y;*/
     }
@@ -128,11 +136,18 @@ package net.picklet.player
       removeEventListener(MouseEvent.MOUSE_MOVE, mouseMove);
       removeEventListener(MouseEvent.MOUSE_UP, mouseUp);
 
+      if (target_x == thumb_start_x + thumb_travel_x) {
+        player.nextPanel(null);
+      }
       // return thumb to its initial position
       target_x = thumb_start_x;
       target_y = thumb_start_y;
-      
       dragging = false;
+    }
+    
+    public function addPlayer(p:SimplePlayer)
+    {
+      this.player = p;
     }
   }
 }
