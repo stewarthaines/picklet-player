@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<project name="PickletPlayer" default="all">
+
+ <!-- Init the build process -->
+ <target name="init" unless="initialized">
+     <!-- Name of project and version -->
+  <property name="FLEX_HOME" location="${basedir}/../../flex_sdk_4"/>
+
+   <property name="proj.name" value="${ant.project.name}" />
+   <property name="proj.shortname" value="${ant.project.name}" />
+   <property name="version.major" value="0" />
+   <property name="version.minor" value="9" />
+   <property name="version.revision" value="0" />
+   <property name="APP_TITLE" value="PickletPlayer" />
+   <property name="APP_WIDTH" value="320" />
+   <property name="APP_HEIGHT" value="480" />
+
+   <!-- Global properties for this build -->
+   <property name="build.dir" location="${basedir}/build" />
+   <property name="flex_src" location="${basedir}" />
+
+   <path id="project.classpath">
+       <pathelement path="${java.class.path}" />
+   </path>
+
+   <taskdef resource="flexTasks.tasks"
+            classpath="${FLEX_HOME}/ant/lib/flexTasks.jar" />
+
+   <echoproperties/>
+
+   <property name="initialized" value="true" />
+
+   <mkdir dir="${build.dir}" />
+ </target>
+
+ <!-- Default target: clean and build the application -->
+ <target name="all" depends="init">
+     <antcall target="clean" />
+     <antcall target="build" />
+ </target>
+
+ <!-- Compile Flex files -->
+ <target name="compile.flex" depends="init">
+     <property name="module"
+               value="${ant.project.name}"
+               description="The name of the application module." />
+
+     <mxmlc file="${flex_src}/${module}.mxml"
+            keep-generated-actionscript="true"
+            output="${build.dir}/${ant.project.name}/${module}.swf"
+            actionscript-file-encoding="UTF-8"
+            incremental="true"
+            context-root="${ant.project.name}"
+            debug="true">
+         <load-config filename="${FLEX_HOME}/frameworks/flex-config.xml" />
+         <source-path path-element="${FLEX_HOME}/frameworks" />
+         <compiler.source-path path-element="${flex_src}" />
+     </mxmlc>
+
+     <!-- <html-wrapper title="${APP_TITLE}"
+                   file="index.html"
+                   application="app"
+                   swf="${module}"
+                   width="${APP_WIDTH}"
+                   height="${APP_HEIGHT}"
+                   version-major="${version.major}"
+                   version-minor="${version.minor}"
+                   version-revision="${version.revision}"
+                   history="true"
+                   template="express-installation"
+                   output="${build.dir}/${ant.project.name}/" /> -->
+
+ </target>
+
+ <!-- Build the application -->
+ <target name="build" depends="init">
+     <antcall target="compile.flex" />
+     <copy file="${build.dir}/${ant.project.name}/${ant.project.name}.swf" todir="../../picklet-builder/static/swf"/>
+ </target>
+
+ <!-- Clean build files -->
+ <target name="clean" depends="init">
+     <delete dir="${basedir}/generated" />
+     <delete dir="${build.dir}" />
+ </target>
+
+ <target name="usage" description="Usage documentation">
+     <echo>
+             all - clean and build the project
+     </echo>
+ </target>
+</project>

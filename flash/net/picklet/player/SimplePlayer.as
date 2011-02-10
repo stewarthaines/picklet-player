@@ -60,7 +60,7 @@ package net.picklet.player
     }
   
     // ------- Methods -------
-    public function loadPicklet(data:Object = null)
+    public function loadPicklet(data:Object = null):void
     {
       if (data == null) return;
 
@@ -69,19 +69,19 @@ package net.picklet.player
       loadPanel(current_panel_index);
     }
     
-    public function previousPanel(evt:Event)
+    public function previousPanel(evt:Event):void
     {
       current_panel_index--;
       loadPanel(current_panel_index);
     }
 
-    public function nextPanel(evt:Event)
+    public function nextPanel(evt:Event):void
     {
       current_panel_index++;
       loadPanel(current_panel_index);
     }
 
-    public function showControls(val:Boolean)
+    public function showControls(val:Boolean):void
     {
       thumb_controller.drawThumb(val);
       var fill_opacity:Number;
@@ -102,7 +102,7 @@ package net.picklet.player
       next_btn.graphics.endFill();
     }
 
-    public function loadPanel(panel_index:Number)
+    public function loadPanel(panel_index:Number):void
     {
       if (panel_index >= data.panels.length) {
         current_panel_index = data.panels.length - 1;
@@ -120,18 +120,18 @@ package net.picklet.player
       
       this.layers = new Array();
 
-      for (var i in data.panels[panel_index].layers) {
-        var layer = data.panels[panel_index].layers[i];
-        var layer_mc = new Layer();
+      for (var i:String in data.panels[panel_index].layers) {
+        var layer:Object = data.panels[panel_index].layers[i];
+        var layer_mc:Layer = new Layer();
         layer_mc.init(layer);
         current_panel.addChild(layer_mc);
         layers.push(layer_mc);
       }
     }
 
-    public function updatePositions(pos:Number = 0)
+    public function updatePositions(pos:Number = 0):void
     {
-      for (var i in layers) {
+      for (var i:String in layers) {
         layers[i].updatePosition(pos);
       }
     }

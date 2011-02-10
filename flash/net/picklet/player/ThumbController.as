@@ -66,7 +66,7 @@ package net.picklet.player
 
     private function getThumb():MovieClip
     {
-      var thumb = new MovieClip();
+      var thumb:MovieClip = new MovieClip();
       if (draw_thumb) {
         thumb.graphics.lineStyle(2, 0xff0000);
       } else {
@@ -122,13 +122,14 @@ package net.picklet.player
       }
       /* notify listeners of move event */
       if (this.player) {
-        var pos = (thumb.x - thumb_start_x) / thumb_travel_x;
+        var pos:Number = (thumb.x - thumb_start_x) / thumb_travel_x;
 /*        trace(pos);*/
         player.updatePositions(pos);
       }
     }
 
-    public function mouseOut(evt:MouseEvent) {
+    public function mouseOut(evt:MouseEvent):void
+    {
       if (dragging && (evt.target == this) && (evt.relatedObject != thumb)) {
         mouseUp(evt);
       } else if (dragging && (evt.target == thumb) && (evt.relatedObject != this)) {
@@ -136,7 +137,7 @@ package net.picklet.player
       }
     }
 
-    public function mouseDown(evt:MouseEvent)
+    public function mouseDown(evt:MouseEvent):void
     {
       thumb.removeEventListener(MouseEvent.MOUSE_DOWN, mouseDown);
       start_x = evt.stageX - thumb.x;
@@ -148,7 +149,7 @@ package net.picklet.player
       dragging = true;
     }
 
-    public function mouseMove(evt:MouseEvent)
+    public function mouseMove(evt:MouseEvent):void
     {
 /*      thumb.x = evt.stageX - start_x;*/
       target_x = evt.stageX - start_x;
@@ -164,7 +165,7 @@ package net.picklet.player
 /*      thumb.y = thumb_start_y;*/
     }
 
-    public function mouseUp(evt:MouseEvent)
+    public function mouseUp(evt:MouseEvent):void
     {
       removeEventListener(MouseEvent.MOUSE_MOVE, mouseMove);
       removeEventListener(MouseEvent.MOUSE_UP, mouseUp);
@@ -178,7 +179,7 @@ package net.picklet.player
       dragging = false;
     }
 
-    public function addPlayer(p:SimplePlayer)
+    public function addPlayer(p:SimplePlayer):void
     {
       this.player = p;
     }
