@@ -63,7 +63,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                description="The name of the application module." />
 
      <mxmlc file="${flex_src}/${module}.mxml"
-            keep-generated-actionscript="true"
+            keep-generated-actionscript="false"
             output="${build.dir}/${ant.project.name}/${module}.swf"
             actionscript-file-encoding="UTF-8"
             incremental="true"
