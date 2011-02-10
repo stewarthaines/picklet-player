@@ -55,7 +55,7 @@ package net.picklet
       loader.load(urlRequest);
       loader.x = - data['origin_x'];
       loader.y = - data['origin_y'];
-      this.rotation = data['rotation_offset'] * 180 / Math.PI;
+      this.rotation = data['rotation'] * 180 / Math.PI;
       this.x = data['start_x'];
       this.y = data['start_y'];
       addChild(loader);
@@ -72,7 +72,7 @@ package net.picklet
       this.loader.x = - pos * this.data['origin_x'] - (1 - pos) * this.data['origin_x'];
       this.loader.y = - pos * this.data['origin_y'] - (1 - pos) * this.data['origin_y'];
 
-      this.rotation = (pos * this.data['rotation'] + this.data['rotation_offset']) * 180 / Math.PI;
+      this.rotation = - (parseFloat(this.data['rotation']) + (pos) * parseFloat(this.data['rotation_offset'])) * 180 / Math.PI;
       this.x = pos * this.data['end_x'] + (1 - pos) * this.data['start_x'];
       this.y = pos * this.data['end_y'] + (1 - pos) * this.data['start_y'];
     }
